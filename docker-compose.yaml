@@ -1,0 +1,34 @@
+
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: on-failure
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - ${DB_PORT}:5432
+    networks:
+      - coffee_shop_net
+
+  # redis:
+  #   image: redis:alpine
+  #   container_name: redis
+  #   restart: on-failure
+  #   ports:
+  #     - ${REDIS_PORT}:6379
+  #   volumes:
+  #     - redis_data:/var/lib/redis/data
+
+volumes:
+  postgres_data:
+  # redis_data:
+
+networks:
+  coffee_shop_net:
+    driver: bridge

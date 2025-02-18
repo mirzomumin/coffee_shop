@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "coffee-shop"
+version = "0.1.0"
+description = ""
+authors = ["Mirzomumin <mirzomumin@list.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = {extras = ["standard"], version = "^0.115.8"}
+pre-commit = "^4.1.0"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.38"}
+pyjwt = "^2.10.1"
+alembic = "^1.14.1"
+asyncpg = "^0.30.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

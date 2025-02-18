@@ -1,0 +1,48 @@
+import logging
+import jwt
+
+from uuid import UUID
+from typing import Annotated
+from fastapi import Depends
+from fastapi.security import HTTPBearer
+from src.core.database import get_session
+from sqlalchemy.ext.asyncio import AsyncSession
+from src.core.base.exceptions import (
+    TokenExpired,
+    TokenInvalid,
+)
+from src.core.repositories.users import UserRepository
+from src.core.models.users import User
+from src.core.base.dependencies import get_token
+from src.core.base.token import JWTToken
+
+
+logger = logging.getLogger("coffee_shop")
+
+
+class JWTAuthentication(HTTPBearer):
+    async def __call__(
+        self,
+        *,
+        token: Annotated[str, Depends(get_token)],
+        session: AsyncSession = Depends(get_session),
+    ) -> User:
+        try:
+            payload = JWTToken.decode_jwt(token=token)
+            user_id: UUID = payload.get("user_id")
+            if user_id is None:
+                raise TokenInvalid
+        except jwt.ExpiredSignatureError as e:
+            logger.exception(f"AUTH EXCEPTION: {e}")
+            raise TokenExpired
+        except jwt.PyJWTError as e:
+            logger.exception(f"AUTH EXCEPTION: {e}")
+            raise TokenInvalid
+        except Exception as e:
+            logger.exception(f"AUTH EXCEPTION: {e}")
+
+        users = await UserRepository.list(db=session, filters=[User.id == user_id])
+        return users[0]
+
+
+jwt_authentication = JWTAuthentication()
