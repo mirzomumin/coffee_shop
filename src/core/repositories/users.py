@@ -6,7 +6,12 @@ from src.core.models.users import User
 
 class UserRepository:
     @classmethod
-    async def add(cls, *, db: AsyncSession, values: dict) -> User:
+    async def create(
+        cls,
+        *,
+        values: dict,
+        db: AsyncSession,
+    ) -> User:
         stmt = insert(User).values(**values).returning(User)
         result = await db.execute(stmt)
         return result.scalar_one()
@@ -15,9 +20,10 @@ class UserRepository:
     async def list(
         cls,
         *,
-        db: AsyncSession,
         filters: list[_ColumnExpressionArgument[bool]] = [],
+        db: AsyncSession,
     ) -> list[User]:
+        filters = []
         query = select(User).where(and_(*filters))
         result = await db.execute(query)
         return result.scalars().all()
