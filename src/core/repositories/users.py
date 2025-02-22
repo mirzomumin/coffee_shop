@@ -24,6 +24,6 @@ class UserRepository:
         db: AsyncSession,
     ) -> list[User]:
         filters = []
-        query = select(User).where(and_(*filters))
+        query = select(User).where(and_(True, *filters))
         result = await db.execute(query)
         return result.scalars().all()

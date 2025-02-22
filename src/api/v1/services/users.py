@@ -9,6 +9,8 @@ from src.api.v1.schemas.users import (
 from src.core.database import get_session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+
+# from sqlalchemy.sql._typing import _ColumnExpressionArgument
 from src.core.base.exceptions import (
     ObjectAlreadyExists,
 )
