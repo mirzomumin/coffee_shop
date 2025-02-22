@@ -47,7 +47,6 @@ class UserService:
     async def list(
         cls,
         *,
-        # filters: list[_ColumnExpressionArgument[bool]] = [],
         session: AsyncSession = Depends(get_session),
     ) -> list[User]:
         filters = []
