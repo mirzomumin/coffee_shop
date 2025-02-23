@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 # from sqlalchemy.sql._typing import _ColumnExpressionArgument
 from src.core.base.exceptions import (
     ObjectAlreadyExists,
+    CodeIsAlreadySent,
 )
 from src.core.repositories.users import UserRepository
 from src.core.models.users import User
@@ -56,7 +57,7 @@ class UserService:
         )
 
         if not is_set:
-            raise Exception("code is set!")
+            raise CodeIsAlreadySent
 
         return user
 
