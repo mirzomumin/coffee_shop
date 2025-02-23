@@ -16,18 +16,20 @@ services:
     networks:
       - coffee_shop_net
 
-  # redis:
-  #   image: redis:alpine
-  #   container_name: redis
-  #   restart: on-failure
-  #   ports:
-  #     - ${REDIS_PORT}:6379
-  #   volumes:
-  #     - redis_data:/var/lib/redis/data
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: on-failure
+    ports:
+      - ${REDIS_PORT}:6379
+    volumes:
+      - redis_data:/var/lib/redis/data
+    networks:
+      - coffee_shop_net
 
 volumes:
   postgres_data:
-  # redis_data:
+  redis_data:
 
 networks:
   coffee_shop_net:

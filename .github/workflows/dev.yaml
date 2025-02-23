@@ -64,6 +64,8 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           TEST_DB_NAME: ${{ secrets.TEST_DB_NAME }}
           TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
         run: pytest -s
 
       - name: Install ruff linter
