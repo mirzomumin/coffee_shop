@@ -16,6 +16,8 @@ from src.core.base.exceptions import (
 )
 from src.core.repositories.users import UserRepository
 from src.core.models.users import User
+from src.core.base.redis import redis
+from src.core.base.funcs import get_random_number
 
 logger = logging.getLogger("coffee_shop")
 
@@ -28,12 +30,15 @@ class UserService:
         user_schema: UserCreate = Body(),
         session: AsyncSession = Depends(get_session),
     ) -> User:
+        # prepare user data to insert into db
         user_dict = user_schema.model_dump()
         username = user_dict.get("username")
         if username is None:
             email = user_dict.get("email")
             username = re.sub(r"[^a-zA-Z\d+]", "", email)
             user_dict["username"] = username
+
+        # insert into db
         try:
             user = await UserRepository.create(db=session, values=user_dict)
         except IntegrityError as e:
@@ -41,6 +46,18 @@ class UserService:
             raise ObjectAlreadyExists
         await session.commit()
         await session.refresh(user)
+
+        # set verify code into cache
+        is_set = await redis.set(
+            name=user.email,
+            value=get_random_number(),
+            ex=120,
+            nx=True,
+        )
+
+        if not is_set:
+            raise Exception("code is set!")
+
         return user
 
     @classmethod

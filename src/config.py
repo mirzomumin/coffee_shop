@@ -15,6 +15,8 @@ class Settings:
     DOCS_URL: str | None = os.environ.get("DOCS_URL", None)
     OPENAPI_URL: str | None = os.environ.get("OPENAPI_URL", None)
     REDOC_URL: str | None = os.environ.get("REDOC_URL", None)
+    REDIS_HOST: str = os.environ["REDIS_HOST"]
+    REDIS_PORT: int = os.environ["REDIS_PORT"]
 
 
 class LogConfig(BaseModel):
